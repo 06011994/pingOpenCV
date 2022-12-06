@@ -13,8 +13,8 @@ shooting = pygame.mixer.Sound("sound/bounce.ogg")
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-window_height = 500
-window_width = 800
+window_height = 300
+window_width = 500
 display_surf = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Pong")
 # Loading all images
@@ -30,7 +30,7 @@ lower = np.array([60,25,30], dtype = 'uint8')
 upper = np.array([255,220,255], dtype = 'uint8')
 flag = 0
 
-
+#definir les axes 
 class Paddle:
     def __init__(self, x, w, h):
         self.w = w
@@ -44,18 +44,19 @@ class Paddle:
         pygame.draw.rect(display_surf, WHITE, self.rect)
 
 
-
+#le mouvement du rectangle
     def detectMove(self, cy):
         self.rect.y = cy
         self.draw()
 
+#barre de jeu de la machine
 class AutoPaddle(Paddle):
     def __init__(self, x, w, h, speed, ball):
         super().__init__(x, w, h)
         self.speed = speed
         self.ball = ball
 
-
+#mouvement automatique
     def move(self):
         if self.ball.dir_x == 1:
             if self.rect.y + self.rect.h/2 < self.ball.rect.bottom:
@@ -71,6 +72,7 @@ class ScoreBoard:
         self.score = score
         self.font = pygame.font.Font('freesansbold.ttf', 20)
 
+#affichage du score
     def display(self, score):
         result_srf = self.font.render('Score : %s' % score, True, WHITE)
         result_rect = result_srf.get_rect()
@@ -92,6 +94,7 @@ class Ball:
     def draw(self):
         pygame.draw.rect(display_surf, WHITE, self.rect)
 
+#le rebon de la ball
     def bounce(self, axis):
         if axis == 'x':
             self.dir_y *= -1
@@ -99,6 +102,7 @@ class Ball:
             self.dir_x *= -1
         shooting.play()
 
+#controle la direction de la ball (haut, bas, gauche, droite)
     def hit_ceiling(self):
         if self.dir_y == -1 and self.rect.top <= self.h:
             return True
@@ -117,17 +121,20 @@ class Ball:
         else:
             return False
 
+#la barre de jeu de l'utilisateur
     def hit_paddle_user(self, paddle):
         if self.rect.left == paddle.rect.right and self.rect.bottom >= paddle.rect.top and self.rect.top <= paddle.rect.bottom:
             return True
         else:
             return False
 
+#la barre de jeu de l'ordinateur
     def hit_paddle_computer(self, paddle):
         if self.rect.right == paddle.rect.left and self.rect.bottom >= paddle.rect.top and self.rect.top <= paddle.rect.bottom:
             return True
         else:
             return False
+
 
     def move(self):
         self.rect.x += (self.dir_x * self.speed)
@@ -137,7 +144,7 @@ class Ball:
 
 
 class Game:
-    def __init__(self, line_thickness=10, speed=5):
+    def __init__(self, line_thickness=10, speed=4):
         self.line_thickness = line_thickness
         self.speed = speed
         ball_x = window_width / 2
@@ -153,6 +160,7 @@ class Game:
         self.paddles['computer'] = AutoPaddle(window_width - paddle_x - 10, paddle_w, paddle_h, self.speed, self.ball)
         self.score = ScoreBoard()
 
+#la fenêtre de jeu
     def draw_arena(self):
         display_surf.blit(background, [0,0])
 
