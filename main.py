@@ -144,7 +144,7 @@ class Ball:
 
 
 class Game:
-    def __init__(self, line_thickness=10, speed=4):
+    def __init__(self, line_thickness=10, speed=5):
         self.line_thickness = line_thickness
         self.speed = speed
         ball_x = window_width / 2
@@ -220,8 +220,8 @@ def main():
             cv2.imshow("contour", frame_resize)
             game.update()
             if game.ball.hit_wall():
-                #break
-                game.update()
+                break
+                #game.update()
                 
             pygame.display.update()
             fps_clock.tick(fps)
